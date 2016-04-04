@@ -1,7 +1,7 @@
 '''
 Created on Mar 29, 2016
 
-@author: system
+@author: kranthi
 '''
 import sys
 import os
