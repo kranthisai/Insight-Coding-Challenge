@@ -1,7 +1,7 @@
 '''
 Created on Mar 29, 2016
 
-@author: kranthi
+@author: Kranthi
 '''
 import sys
 import os
@@ -10,8 +10,6 @@ import time
 import igraph
 from igraph import *
 from datetime import datetime
-import pandas as pd
-import numpy as np
 start_time=time.time()
 class average_deg:
     def __init__(self):
@@ -88,8 +86,7 @@ class average_deg:
             self.add_edges(hashtag)
         
         try:
-            number_of_vertices=len([vertex for vertex in self.g.degree() if vertex!=0])
-            res='%.2f' %round(float(sum(self.g.degree()))/number_of_vertices,2)
+            res='%.2f' %round(float(sum(self.g.degree()))/len(self.g.degree()),2)
             return res
         except:
             return '%.2f' %0.00
@@ -124,6 +121,14 @@ class average_deg:
                     del self.unique_edges[(out_of_window_hashtags[j],out_of_window_hashtags[i])]
                     del self.unique_edges[(out_of_window_hashtags[i],out_of_window_hashtags[j])]
                     self.g.delete_edges([(out_of_window_hashtags[i],out_of_window_hashtags[j])])
+                    if (self.g.degree(out_of_window_hashtags[i]))==0:
+                        self.unique_hashtags.remove(out_of_window_hashtags[i])
+                        self.g.delete_vertices(out_of_window_hashtags[i])
+                        
+                    if (self.g.degree(out_of_window_hashtags[j]))==0:
+                        self.unique_hashtags.remove(out_of_window_hashtags[j])
+                        self.g.delete_vertices(out_of_window_hashtags[j])
+                    
 
         
         pass
@@ -140,18 +145,22 @@ class average_deg:
             print(" Could not open the file ")
             sys.exit(1) 
         for tweet in tweet_file:
-            tweet=json.loads(tweet)
-            if tweet.get('created_at') is not None:
-                hashtags=set([item.get('text') for item in tweet.get('entities').get('hashtags')])
-                current_timestamp=tweet.get('created_at')
-                current_timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(current_timestamp,'%a %b %d %H:%M:%S +0000 %Y'))
-                current_timestamp=time.strptime(current_timestamp,"%Y-%m-%d %H:%M:%S")
-                hashtags=[item for item in hashtags]
-                if self.max_timestamp_processed==0:
-                    self.max_timestamp_processed=current_timestamp
-                res=self.hashtag_graph(current_timestamp, hashtags)
-                f.write(res)
-                f.write('\n')
+            try:
+                tweet=json.loads(tweet)
+                if tweet.get('created_at') is not None:
+                    hashtags=set([item.get('text') for item in tweet.get('entities').get('hashtags')])
+                    current_timestamp=tweet.get('created_at')
+                    current_timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(current_timestamp,'%a %b %d %H:%M:%S +0000 %Y'))
+                    current_timestamp=time.strptime(current_timestamp,"%Y-%m-%d %H:%M:%S")
+                    hashtags=[item for item in hashtags]
+                    if self.max_timestamp_processed==0:
+                        self.max_timestamp_processed=current_timestamp
+                    res=self.hashtag_graph(current_timestamp, hashtags)
+                    f.write(res+'\n')
+                    
+            except:
+                print("The following Json text file content is not cleaned :\n",tweet)
+                
         f.close()
         pass
 avg=average_deg() 
