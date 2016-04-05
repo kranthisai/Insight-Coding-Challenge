@@ -1,8 +1,9 @@
 Insight Data Engineering - Coding Challenge
 ===========================================================
 
-## Packages Used 
+## Dependencies
 
+* Python 2.7
 * iGraph -- For HashTag Graph.
 * Pandas 
 * Numpy
