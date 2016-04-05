@@ -21,3 +21,7 @@ Insight Data Engineering - Coding Challenge
 * In the second method, I used Pandas Datafame to store "created_at" and "hashtags" fields. Then I used map function to process each tweet. The implementation part is same as descrived above. Also, the run time of first method is better than second method. It has taken roughly 7 seconds to process 10000 tweets via first method and 9 seconds via using Pandas dataframes. 
 * The first method is stored in average_degree.py and second method is in average_degree_1.py
 * My 60-second window is inclusive. 
+
+## How to Run
+* Run ./run.sh - It will take tweets from tweet_input directory and writes output in tweet_output directory 
+* Run ./run_mytweets.sh - It will run on small number of tweets, which satisfies all the boundary conditions. It takes mytweets.txt from tweets_input folder and writes output to tweets_output folder.
